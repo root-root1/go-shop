@@ -39,7 +39,7 @@ function Login() {
                 password
             });
             state.dispatch({type: "USER_LOGIN", payload: data});
-            Cookies.set("userInfo", data);
+            Cookies.set("userInfo", JSON.stringify(data));
             await router.push(redirect || '/');
         } catch (err) {
             console.log(err)

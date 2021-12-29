@@ -48,6 +48,9 @@ const useStyles = makeStyles({
     link: {
         margin: 10,
         fontSize: 20
+    },
+    transparentBackground: {
+        backgroundColor: 'transparent'
     }
 })
 

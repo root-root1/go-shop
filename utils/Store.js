@@ -4,9 +4,11 @@ import Cookies from "js-cookie";
 const initialState = {
     darkMode: Cookies.get("darkMode") === "ON",
     cart: {
-        cartItems: Cookies.get("cartItem")? JSON.parse(Cookies.get("cartItem")) :[]
+        cartItems: Cookies.get("cartItem") ? JSON.parse(Cookies.get("cartItem")) : [],
+        shippingAddress: Cookies.get("shippingAddress") ? JSON.parse(Cookies.get("shippingAddress")) : {},
+        paymentMethod: Cookies.get("paymentMethod") ? Cookies.get('paymentMethod'): ''
     },
-    userInfo: Cookies.get("userInfo")? JSON.parse(Cookies.get("userInfo")) : null
+    userInfo: Cookies.get("userInfo") ? JSON.parse(Cookies.get("userInfo")) : null
 }
 
 export const Store = createContext(initialState);
@@ -26,11 +28,15 @@ function reducer(state, actions) {
             Cookies.set("cartItem", JSON.stringify(cartItems));
             return {...state, cart: {...state.cart, cartItems}};
         }
-        case "CART_REMOVE_ITEM":{
+        case "CART_REMOVE_ITEM": {
             const cartItems = state.cart.cartItems.filter((item) => item._id !== actions.payload._id);
             Cookies.set("cartItem", JSON.stringify(cartItems));
             return {...state, cart: {...state.cart, cartItems}};
         }
+        case 'SAVE_SHIPPING_ADDRESS':
+            return {...state, cart: {...state.cart, shippingAddress: actions.payload}}
+        case 'SAVE_PAYMENT_METHOD':
+            return {...state, cart: {...state.cart, paymentMethod: actions.payload}}
         case "USER_LOGIN": {
             return {...state, userInfo: actions.payload}
         }

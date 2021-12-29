@@ -53,7 +53,7 @@ const Layout = ({children, title, descriptions}) => {
             type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON"
         });
         const newDarkMode = !darkMode;
-        Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
+        Cookies.set("darkMode", JSON.stringify(newDarkMode ? "ON" : "OFF"));
     }
     const profileClickHandler = (e) => {
         setAnchorEl(e.currentTarget);
