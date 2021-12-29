@@ -19,11 +19,12 @@ import {
     RadioGroup,
     Typography
 } from "@material-ui/core";
+import dynamic from "next/dynamic";
 import {useSnackbar} from "notistack";
 
 function Payment() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [paymentMethod, setPaymentMethod] = useState();
+    const [paymentMethod, setPaymentMethod] = useState('');
     const classes = useStyles();
     const router = useRouter();
     const state = useContext(Store);
@@ -33,9 +34,11 @@ function Payment() {
         if (!shippingAddress.address) {
             router.push('/shipping')
         } else {
+            // console.log("Else part")
             setPaymentMethod(Cookies.get('paymentMethod') || '');
+            // console.log("else part payment method ", paymentMethod);
         }
-    }, [router, shippingAddress.address, paymentMethod]);
+    }, []);
     const submitHandler = (e) => {
         closeSnackbar();
         e.preventDefault();
@@ -43,8 +46,8 @@ function Payment() {
             enqueueSnackbar("Select a Payment Method First", { variant: 'error'});
         }else{
             state.dispatch({type: "SAVE_PAYMENT_METHOD", payload: paymentMethod});
-            Cookies.set("paymentMethod", JSON.stringify(paymentMethod));
-            router.push('/placeOrder')
+            Cookies.set("paymentMethod", paymentMethod);
+            router.push('/placeOrder');
         }
     }
     return (
@@ -61,9 +64,9 @@ function Payment() {
                                 value={paymentMethod}
                                 onChange={(e) => setPaymentMethod(e.target.value)}
                             >
-                                <FormControlLabel control={<Radio/>} label='PayPal' value='PayPal'/>
-                                <FormControlLabel control={<Radio/>} label='Stripe' value='Stripe'/>
-                                <FormControlLabel control={<Radio/>} label='Cash' value='Cash'/>
+                                <FormControlLabel control={<Radio/>} label='PayPal' value='PayPal' />
+                                <FormControlLabel control={<Radio/>} label='Stripe' value='Stripe' />
+                                <FormControlLabel control={<Radio/>} label='Cash' value='Cash' />
                             </RadioGroup>
                         </FormControl>
                     </ListItem>

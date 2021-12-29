@@ -14,22 +14,26 @@ import axios from "axios";
 import {useContext} from "react";
 import {Store} from "../../utils/Store";
 import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
 
 const ProductScreen = ({product}) => {
     const classes = useStyles();
     const router = useRouter();
     const state = useContext(Store);
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     if (!product) {
         return <div>Product not Found</div>
     }
 
     const addToCartHandler = async () => {
+        closeSnackbar();
         const existItem = state.state.cart.cartItems.find(x => x._id === product._id);
         const quantity = existItem ? existItem.quantity + 1 : 1;
         const {data} = await axios.get(`/api/products/${product._id}`);
-        if (data.countInStock < quantity){
-            window.alert("Product is Out of Stock");
+
+        if (data.countInStock < quantity) {
+            enqueueSnackbar("Product is Out of Stock", {variant: "warning"});
             return;
         }
         state.dispatch({

@@ -18,16 +18,20 @@ import Image from 'next/image';
 import NextLink from "next/link";
 import axios from "axios";
 import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
 
 function CartScreen() {
     const state = useContext(Store);
     const router = useRouter();
     const {cart: {cartItems}} = state.state;
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
 
     const updateCartHandler = async (item, quantity) => {
+        closeSnackbar()
         const {data} = await axios.get(`/api/products/${item._id}`);
-        if (data.countInStock <= quantity){
-            window.alert("Product is Out of Stock");
+        if (data.countInStock < quantity){
+            enqueueSnackbar("Product is Out of Stock", {variant: "warning"});
             return;
         }
         state.dispatch({
