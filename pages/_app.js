@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {StoreProvider} from "../utils/Store";
 import {CssBaseline} from "@material-ui/core";
 import {SnackbarProvider} from "notistack";
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 
 function MyApp({Component, pageProps}) {
     useEffect(() => {
@@ -19,7 +20,9 @@ function MyApp({Component, pageProps}) {
         }}>
             <StoreProvider>
                 <CssBaseline/>
-                <Component {...pageProps} />
+                <PayPalScriptProvider deferLoading={true} options={{ components: 'buttons'}}>
+                    <Component {...pageProps} />
+                </PayPalScriptProvider>
             </StoreProvider>
         </SnackbarProvider>
     )

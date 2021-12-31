@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { createContext, useReducer } from 'react';
+import {createContext, useReducer} from 'react';
 
 export const Store = createContext();
 const initialState = {
@@ -23,9 +23,9 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
         case 'DARK_MODE_ON':
-            return { ...state, darkMode: true };
+            return {...state, darkMode: true};
         case 'DARK_MODE_OFF':
-            return { ...state, darkMode: false };
+            return {...state, darkMode: false};
         case 'CART_ADD_ITEM': {
             const newItem = action.payload;
             const existItem = state.cart.cartItems.find(
@@ -37,29 +37,31 @@ function reducer(state, action) {
                 )
                 : [...state.cart.cartItems, newItem];
             Cookies.set('cartItems', JSON.stringify(cartItems));
-            return { ...state, cart: { ...state.cart, cartItems } };
+            return {...state, cart: {...state.cart, cartItems}};
         }
         case 'CART_REMOVE_ITEM': {
             const cartItems = state.cart.cartItems.filter(
                 (item) => item._id !== action.payload._id
             );
             Cookies.set('cartItems', JSON.stringify(cartItems));
-            return { ...state, cart: { ...state.cart, cartItems } };
+            return {...state, cart: {...state.cart, cartItems}};
         }
         case 'SAVE_SHIPPING_ADDRESS':
             return {
                 ...state,
-                cart: { ...state.cart, shippingAddress: action.payload },
+                cart: {...state.cart, shippingAddress: action.payload},
             };
         case 'SAVE_PAYMENT_METHOD':
             return {
                 ...state,
-                cart: { ...state.cart, paymentMethod: action.payload },
+                cart: {...state.cart, paymentMethod: action.payload},
             };
+        case 'CART_CLEAR':
+            return {...state, cart: {...state.cart, cartItems: []}}
         case 'USER_LOGIN':
-            return { ...state, userInfo: action.payload };
+            return {...state, userInfo: action.payload};
         case 'USER_LOGOUT':
-            return { ...state, userInfo: null, cart: { cartItems: [] } };
+            return {...state, userInfo: null, cart: {cartItems: [], shippingAddress: {}, paymentMethod: ''}};
 
         default:
             return state;
@@ -68,6 +70,6 @@ function reducer(state, action) {
 
 export function StoreProvider(props) {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const value = { state, dispatch };
+    const value = {state, dispatch};
     return <Store.Provider value={value}>{props.children}</Store.Provider>;
 }

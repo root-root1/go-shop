@@ -58,12 +58,15 @@ const Layout = ({children, title, descriptions}) => {
     const profileClickHandler = (e) => {
         setAnchorEl(e.currentTarget);
     }
-    const profileCloseHandler = (e) => {
+    const profileCloseHandler = (e, redirect) => {
         setAnchorEl(null);
+        if (redirect) {
+            router.push(redirect);
+        }
     }
     const logoutHandler = (e) => {
         setAnchorEl(null);
-        state.dispatch({ type: "USER_LOGOUT" });
+        state.dispatch({type: "USER_LOGOUT"});
         Cookies.remove("userInfo");
         Cookies.remove("cartItem");
         router.push('/');
@@ -126,8 +129,9 @@ const Layout = ({children, title, descriptions}) => {
                                                 horizontal: 'left',
                                             }}
                                         >
-                                            <MenuItem onClick={profileCloseHandler}>Profile</MenuItem>
-                                            <MenuItem onClick={profileCloseHandler}>My account</MenuItem>
+                                            <MenuItem onClick={(e) => profileCloseHandler(e, '/profile')}>Profile</MenuItem>
+                                            <MenuItem onClick={(e) => profileCloseHandler(e, '/order-history')}>Order
+                                                History</MenuItem>
                                             <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                                         </Menu>
                                     </>
